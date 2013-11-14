@@ -1,23 +1,27 @@
 $(document).ready(function() {
     var img = $("#img");
-    //img.style.visiblility = "visible";
     var div = $("#puzzle");
 
     $(div).html(img);
-    console.log("hello world!");
 
+    // Tile Size
+    var w = 4;
+    var h = 3;
+    // Image Size
+    var iw = 400;
+    var ih = 300;
+    // Piece Size
+    var pw = 100;
+    var ph = 100;
     var pieces = ['<table>'];
-    var w = 400;
-    var h = 300;
-    for (var i = 0; i < w; i+=100) {
+    for (var i = 0; i < h; i++) {
         pieces.push('<tr>');
-        for (var j = 0; j < h; j+=100) {
-            pieces.push('<td class="puzzle" style="background-position: '+-i+'px '+-j+'px"></div>');
+        for (var j = 0; j < w; j++) {
+            pieces.push('<td id="'+i+j+'" class="puzzle" style="background-position: '
+                +-(iw/pw * j)+'px '+-(ih/ph * i)+'px"></div>');
         }
     }
-    pieces.push('</table');
+    pieces.push('</table>');
 
-    console.log(pieces);
     $(div).append(pieces.join(''));
-
 });
