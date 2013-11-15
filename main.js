@@ -7,6 +7,7 @@ var PuzzleGame = {
     // Tile Width/Height
     width: 10,
     height: 10,
+    clicks: 0,
     start: function() {
         var div = $("#puzzle");
 
@@ -16,11 +17,14 @@ var PuzzleGame = {
         $(div).append(this.createBoard(this.createImages(img)));
 
         var getIndex = this.getIndex;
+        var clicks = this.clicks;
 
         $('.puzzle_td').click(function() {
             var slot = $(this)[0];
             console.log('td id: ' + slot.id.substr(-3));
             console.log('img id: ' + slot.firstChild.id.substr(-3));
+            clicks++; //Make this only increment if it is a valid move.
+            $("#clicks").html("Clicks: " + clicks);
         });
     },
 
