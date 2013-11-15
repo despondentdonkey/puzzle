@@ -18,13 +18,16 @@ var PuzzleGame = {
 
         var getIndex = this.getIndex;
         var clicks = this.clicks;
+        var isValidMove = this.isValidMove;
 
         $('.puzzle_td').click(function() {
             var slot = $(this)[0];
             console.log('td id: ' + slot.id.substr(-3));
             console.log('img id: ' + slot.firstChild.id.substr(-3));
-            clicks++; //Make this only increment if it is a valid move.
-            $("#clicks").html("Clicks: " + clicks);
+            if (isValidMove(getIndex(slot), {x: 9, y: 9})) {
+                clicks++;
+                $("#clicks").html("Clicks: " + clicks);
+            }
         });
     },
 
@@ -35,6 +38,13 @@ var PuzzleGame = {
             x: id.split("|")[1],
             y: /[0-9]+/.exec(id)[0]
         };
+    },
+
+    isValidMove: function(clickedSlot, emptySlot) {
+        if (clickedSlot.x == emptySlot.x && clickedSlot.y == emptySlot.y)
+            return false;
+        else
+            return (clickedSlot.x == emptySlot.x || clickedSlot.y == emptySlot.y);
     },
 
     createBoard: function(images) {
