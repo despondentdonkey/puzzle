@@ -21,12 +21,13 @@ var PuzzleGame = {
         var getIndex = this.getIndex;
         var clicks = this.clicks;
         var isValidMove = this.isValidMove;
+        var w = this.width, h = this.height;
 
         $('.puzzle_td').click(function() {
             var slot = $(this)[0];
             console.log('td id: ' + slot.id.substr(-3));
             console.log('img id: ' + slot.firstChild.id.substr(-3));
-            if (isValidMove(getIndex(slot), {x: 9, y: 9})) {
+            if (isValidMove(getIndex(slot), {x: w-1, y: h-1})) {
                 clicks++;
                 $("#clicks").html("Clicks: " + clicks);
             }
