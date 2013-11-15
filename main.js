@@ -17,8 +17,8 @@ var PuzzleGame = {
         $(div).append(this.createBoard(this.createImages(img)));
 
         $('.puzzle_td').click(function() {
-            console.log('td id: ' + $(this)[0].id.substr(-2));
-            console.log('img id: ' + $(this)[0].firstChild.id.substr(-2));
+            console.log('td id: ' + $(this)[0].id.substr(-3));
+            console.log('img id: ' + $(this)[0].firstChild.id.substr(-3));
         });
     },
 
@@ -28,8 +28,10 @@ var PuzzleGame = {
         for (var i = 0; i < h; i++) {
             pieces.push('<tr>');
             for (var j = 0; j < w; j++) {
-                pieces.push('<td class="puzzle_td" id="puzzle_td_'+i+j+'">'+
-                    images[i][j]+'</td>');
+                pieces.push('<td class="puzzle_td" id="puzzle_td_'+i+'|'+j+'">');
+                if (!(i === h-1 && j === w-1)) {
+                    pieces.push(images[i][j]+'</td>');
+                }
             }
         }
         pieces.push('</table>');
@@ -57,7 +59,7 @@ var PuzzleGame = {
                 gc.drawImage(img, j * sliceWidth, i * sliceHeight, sliceWidth, sliceHeight, 0, 0, canvas.width, canvas.height);
 
                 var imgURL = canvas.toDataURL();
-                images[i][j] = '<img src="'+imgURL+'" class="puzzle_img" id="puzzle_img_'+i+j+'" />';
+                images[i][j] = '<img src="'+imgURL+'" class="puzzle_img" id="puzzle_img_'+i+'|'+j+'" />';
                 //gc.clearRect(0, 0, canvas.width, canvas.height); // necessary?
             }
         }
