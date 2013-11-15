@@ -18,8 +18,6 @@ var PuzzleGame = {
 
         $(div).append(this.createBoard(this.createImages(img)));
 
-        var w = this.width, h = this.height;
-
         $('.puzzle_td').click(function() {
             var slot = $(this)[0];
             PuzzleGame.handleMove(slot);
@@ -89,15 +87,16 @@ var PuzzleGame = {
     },
 
     isValidMove: function(clickedSlot, emptySlot) {
-        if (clickedSlot.x == emptySlot.x && clickedSlot.y == emptySlot.y)
+        if (+clickedSlot.x === +emptySlot.x && +clickedSlot.y === +emptySlot.y)
             return false;
         else
-            return (clickedSlot.x == emptySlot.x || clickedSlot.y == emptySlot.y);
+            return (+clickedSlot.x === +emptySlot.x || +clickedSlot.y === +emptySlot.y);
     },
 
     createBoard: function(images) {
         var w = this.width, h = this.height;
         var pieces = ['<table id="puzzle_table">'];
+
         for (var i = 0; i < h; i++) {
             pieces.push('<tr>');
             for (var j = 0; j < w; j++) {
@@ -108,6 +107,7 @@ var PuzzleGame = {
                 pieces.push('</td>');
             }
         }
+
         pieces.push('</table>');
 
         return pieces.join('');
