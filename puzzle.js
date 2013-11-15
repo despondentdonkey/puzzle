@@ -18,20 +18,40 @@ var PuzzleGame = {
 
         $(div).append(this.createBoard(this.createImages(img)));
 
-        var getIndex = this.getIndex;
-        var clicks = this.clicks;
-        var isValidMove = this.isValidMove;
         var w = this.width, h = this.height;
 
         $('.puzzle_td').click(function() {
             var slot = $(this)[0];
-            console.log('td id: ' + slot.id.substr(-3));
-            console.log('img id: ' + slot.firstChild.id.substr(-3));
-            if (isValidMove(getIndex(slot), {x: w-1, y: h-1})) {
-                clicks++;
-                $("#clicks").html("Clicks: " + clicks);
-            }
+            PuzzleGame.handleMove(slot);
         });
+    },
+
+    handleMove: function(clickedSlot) {
+        var slotIndex = this.getIndex(clickedSlot);
+        var board = this.getBoard();
+        //console.log('td id: ' + slot.id.substr(-3));
+        //console.log('img id: ' + slot.firstChild.id.substr(-3));
+        //console.log(PuzzleGame.getSlot(slotIndex.x, slotIndex.y));
+
+        //Get the empty slot from the board.
+        var emptySlot;
+        for (var i=0; i < board.childNodes.length; ++i) {
+            var row = board.childNodes[i];
+
+            for (var j=0; j < row.childNodes.length; ++j) {
+                var tmpSlot = row.childNodes[j];
+
+                if (tmpSlot.childNodes.length <= 0) {
+                    emptySlot = tmpSlot;
+                    break;
+                }
+            }
+        }
+
+        if (this.isValidMove(slotIndex, this.getIndex(emptySlot))) {
+            this.clicks++;
+            $("#clicks").html("Clicks: " + this.clicks);
+        }
     },
 
     //Gets the index of the object from the id. Must have a format of #|#.
@@ -41,6 +61,16 @@ var PuzzleGame = {
             x: id.split("|")[1],
             y: /[0-9]+/.exec(id)[0]
         };
+    },
+
+    getBoard: function() {
+        return $("#puzzle_table")[0].childNodes[0];
+    },
+
+    getSlot: function(x, y) {
+        var board = this.getBoard();
+        var row = board.childNodes[y];
+        return row.childNodes[x];
     },
 
     onResetClick: function() {
