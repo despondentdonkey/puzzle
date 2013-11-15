@@ -5,21 +5,32 @@ $(document).ready(function() {
 });
 var PuzzleGame = {
     // Tile Width/Height
-    width: 4,
-    height: 3,
+    width: 10,
+    height: 10,
     start: function() {
         var div = $("#puzzle");
 
         //Base image and the urls of the sliced images.
         var img = $("#puzzle_img")[0];
 
-
         $(div).append(this.createBoard(this.createImages(img)));
 
+        var getIndex = this.getIndex;
+
         $('.puzzle_td').click(function() {
-            console.log('td id: ' + $(this)[0].id.substr(-3));
-            console.log('img id: ' + $(this)[0].firstChild.id.substr(-3));
+            var slot = $(this)[0];
+            console.log('td id: ' + slot.id.substr(-3));
+            console.log('img id: ' + slot.firstChild.id.substr(-3));
         });
+    },
+
+    //Gets the index of the object from the id. Must have a format of #|#.
+    getIndex: function(object) {
+        var id = object.id;
+        return {
+            x: id.split("|")[1],
+            y: /[0-9]+/.exec(id)[0]
+        };
     },
 
     createBoard: function(images) {
@@ -30,8 +41,9 @@ var PuzzleGame = {
             for (var j = 0; j < w; j++) {
                 pieces.push('<td class="puzzle_td" id="puzzle_td_'+i+'|'+j+'">');
                 if (!(i === h-1 && j === w-1)) {
-                    pieces.push(images[i][j]+'</td>');
+                    pieces.push(images[i][j]);
                 }
+                pieces.push('</td>');
             }
         }
         pieces.push('</table>');
@@ -60,7 +72,6 @@ var PuzzleGame = {
 
                 var imgURL = canvas.toDataURL();
                 images[i][j] = '<img src="'+imgURL+'" class="puzzle_img" id="puzzle_img_'+i+'|'+j+'" />';
-                //gc.clearRect(0, 0, canvas.width, canvas.height); // necessary?
             }
         }
 
