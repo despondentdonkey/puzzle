@@ -49,6 +49,18 @@ var PuzzleGame = {
         if (this.isValidMove(slotIndex, this.getIndex(emptySlot))) {
             this.clicks++;
             $("#clicks").html("Clicks: " + this.clicks);
+
+            //Some basic right horizontal slot movement.
+            var clickedRow = board.childNodes[this.getIndex(clickedSlot).y];
+            var slotsToMove = $(clickedRow.childNodes).slice(this.getIndex(clickedSlot).x, this.getIndex(emptySlot).x);
+
+            for (var i = slotsToMove.length - 1; i >= 0; --i) {
+                var realIndex = slotIndex.x + i;
+                var currentSlot = this.getSlot(realIndex, slotIndex.y);
+                var destSlot = this.getSlot(realIndex + 1, slotIndex.y);
+
+                $(destSlot).html(currentSlot.childNodes[0]);
+            }
         }
     },
 
@@ -56,8 +68,8 @@ var PuzzleGame = {
     getIndex: function(object) {
         var id = object.id;
         return {
-            x: id.split("|")[1],
-            y: /[0-9]+/.exec(id)[0]
+            x: parseInt(id.split("|")[1], 10),
+            y: parseInt(/[0-9]+/.exec(id)[0], 10)
         };
     },
 
@@ -139,5 +151,4 @@ var PuzzleGame = {
 
         return images;
     }
-
 };
