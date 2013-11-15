@@ -3,11 +3,13 @@ $(document).ready(function() {
         PuzzleGame.start();
     });
 });
+
 var PuzzleGame = {
     // Tile Width/Height
     width: 10,
     height: 10,
     clicks: 0,
+
     start: function() {
         var div = $("#puzzle");
 
@@ -38,6 +40,21 @@ var PuzzleGame = {
             x: id.split("|")[1],
             y: /[0-9]+/.exec(id)[0]
         };
+    },
+
+    onResetClick: function() {
+        var width = $("#puzzle_width")[0].value;
+        var height = $("#puzzle_height")[0].value;
+
+        if (width >= 2 && height >= 2 && width <= 10 && height <= 10) {
+            this.width = width;
+            this.height = height;
+        } else {
+            console.error("Either too big or too small. We should probably tell the player this.");
+        }
+
+        $("#puzzle_table").remove();
+        this.start();
     },
 
     isValidMove: function(clickedSlot, emptySlot) {
