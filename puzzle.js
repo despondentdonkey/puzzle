@@ -25,11 +25,11 @@ var PuzzleGame = {
     },
 
     handleMove: function(clickedSlot) {
-        var slotIndex = this.getIndex(clickedSlot);
+        var clickedIndex = this.getIndex(clickedSlot);
         var board = this.getBoard();
         //console.log('td id: ' + slot.id.substr(-3));
         //console.log('img id: ' + slot.firstChild.id.substr(-3));
-        //console.log(PuzzleGame.getSlot(slotIndex.x, slotIndex.y));
+        //console.log(PuzzleGame.getSlot(clickedIndex.x, clickedIndex.y));
 
         //Get the empty slot from the board.
         var emptySlot;
@@ -46,20 +46,34 @@ var PuzzleGame = {
             }
         }
 
-        if (this.isValidMove(slotIndex, this.getIndex(emptySlot))) {
+        var emptyIndex = this.getIndex(emptySlot);
+
+        if (this.isValidMove(clickedIndex, emptyIndex)) {
             this.clicks++;
             $("#clicks").html("Clicks: " + this.clicks);
 
-            //Some basic right horizontal slot movement.
-            var clickedRow = board.childNodes[this.getIndex(clickedSlot).y];
-            var slotsToMove = $(clickedRow.childNodes).slice(this.getIndex(clickedSlot).x, this.getIndex(emptySlot).x);
+            //Some basic horizontal slot movement. Probably a much better way to do it.
+            var clickedRow = board.childNodes[clickedIndex.y];
+            var slotsToMove;
 
-            for (var i = slotsToMove.length - 1; i >= 0; --i) {
-                var realIndex = slotIndex.x + i;
-                var currentSlot = this.getSlot(realIndex, slotIndex.y);
-                var destSlot = this.getSlot(realIndex + 1, slotIndex.y);
+            if (clickedIndex.x > emptyIndex.x) {
+                slotsToMove = $(clickedRow.childNodes).slice(emptyIndex.x, clickedIndex.x);
+                for (var i = 0; i <= slotsToMove.length; ++i) {
+                    var realIndex = emptyIndex.x + i;
+                    var currentSlot = this.getSlot(realIndex, clickedIndex.y);
+                    var destSlot = this.getSlot(realIndex - 1, clickedIndex.y);
 
-                $(destSlot).html(currentSlot.childNodes[0]);
+                    $(destSlot).html(currentSlot.childNodes[0]);
+                }
+            } else {
+                slotsToMove = $(clickedRow.childNodes).slice(clickedIndex.x, emptyIndex.x);
+                for (var i = slotsToMove.length - 1; i >= 0; --i) {
+                    var realIndex = clickedIndex.x + i;
+                    var currentSlot = this.getSlot(realIndex, clickedIndex.y);
+                    var destSlot = this.getSlot(realIndex + 1, clickedIndex.y);
+
+                    $(destSlot).html(currentSlot.childNodes[0]);
+                }
             }
         }
     },
