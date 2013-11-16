@@ -182,16 +182,35 @@ var PuzzleGame = {
         return complete;
     },
 
+    shuffle2DArray: function(array) {
+        var arrayCopy = array.slice(0);
+
+        //Shuffle rows
+        arrayCopy.sort(function() {
+            return Math.random() - 0.5;
+        });
+
+        //Shuffle columns
+        for (var i = 0; i < arrayCopy.length; ++i) {
+            arrayCopy[i].sort(function() {
+                return Math.random() - 0.5;
+            });
+        }
+
+        return arrayCopy;
+    },
+
     createBoard: function(images) {
         var w = this.width, h = this.height;
         var pieces = ['<table id="puzzle_table">'];
+        var shuffledImages = this.shuffle2DArray(images);
 
         for (var i = 0; i < h; i++) {
             pieces.push('<tr>');
             for (var j = 0; j < w; j++) {
                 pieces.push('<td class="puzzle_td" id="puzzle_td_'+i+'|'+j+'">');
                 if (!(i === h-1 && j === w-1)) {
-                    pieces.push(images[i][j]);
+                    pieces.push(shuffledImages[i][j]);
                 }
                 pieces.push('</td>');
             }
