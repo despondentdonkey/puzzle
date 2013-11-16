@@ -55,24 +55,48 @@ var PuzzleGame = {
             //Some basic horizontal slot movement. Probably a much better way to do it.
             var clickedRow = board.childNodes[clickedIndex.y];
             var slotsToMove;
+            var rows;
 
-            if (clickedIndex.x > emptyIndex.x) {
-                slotsToMove = $(clickedRow.childNodes).slice(emptyIndex.x, clickedIndex.x);
-                for (var i = 0; i <= slotsToMove.length; ++i) {
-                    var realIndex = emptyIndex.x + i;
-                    var currentSlot = this.getSlot(realIndex, clickedIndex.y);
-                    var destSlot = this.getSlot(realIndex - 1, clickedIndex.y);
+            if (clickedIndex.y === emptyIndex.y) {
+                if (clickedIndex.x > emptyIndex.x) {
+                    slotsToMove = $(clickedRow.childNodes).slice(emptyIndex.x, clickedIndex.x);
+                    for (var i = 0; i <= slotsToMove.length; ++i) {
+                        var realIndex = emptyIndex.x + i;
+                        var currentSlot = this.getSlot(realIndex, clickedIndex.y);
+                        var destSlot = this.getSlot(realIndex - 1, clickedIndex.y);
 
-                    $(destSlot).html(currentSlot.childNodes[0]);
+                        $(destSlot).html(currentSlot.childNodes[0]);
+                    }
+                } else {
+                    slotsToMove = $(clickedRow.childNodes).slice(clickedIndex.x, emptyIndex.x);
+                    for (var i = slotsToMove.length - 1; i >= 0; --i) {
+                        var realIndex = clickedIndex.x + i;
+                        var currentSlot = this.getSlot(realIndex, clickedIndex.y);
+                        var destSlot = this.getSlot(realIndex + 1, clickedIndex.y);
+
+                        $(destSlot).html(currentSlot.childNodes[0]);
+                    }
                 }
-            } else {
-                slotsToMove = $(clickedRow.childNodes).slice(clickedIndex.x, emptyIndex.x);
-                for (var i = slotsToMove.length - 1; i >= 0; --i) {
-                    var realIndex = clickedIndex.x + i;
-                    var currentSlot = this.getSlot(realIndex, clickedIndex.y);
-                    var destSlot = this.getSlot(realIndex + 1, clickedIndex.y);
+            } else if (clickedIndex.x === emptyIndex.x) {
+                //do vertical stuff
+                if (clickedIndex.y < emptyIndex.y) {
+                    rows = $(board.childNodes).slice(clickedIndex.y, emptyIndex.y);
+                    for (var i = rows.length - 1; i >= 0; --i) {
+                        var realIndex = clickedIndex.y + i;
+                        var currentSlot = this.getSlot(clickedIndex.x, realIndex);
+                        var destSlot = this.getSlot(clickedIndex.x, realIndex + 1);
 
-                    $(destSlot).html(currentSlot.childNodes[0]);
+                        $(destSlot).html(currentSlot.childNodes[0]);
+                    }
+                } else {
+                    rows = $(board.childNodes).slice(emptyIndex.y, clickedIndex.y);
+                    for (var i = 0; i <= rows.length; ++i) {
+                        var realIndex = emptyIndex.y + i;
+                        var currentSlot = this.getSlot(clickedIndex.x, realIndex);
+                        var destSlot = this.getSlot(clickedIndex.x, realIndex - 1);
+
+                        $(destSlot).html(currentSlot.childNodes[0]);
+                    }
                 }
             }
         }
@@ -93,8 +117,13 @@ var PuzzleGame = {
 
     getSlot: function(x, y) {
         var board = this.getBoard();
-        var row = board.childNodes[y];
-        return row.childNodes[x];
+
+        if (y < 0 || x < 0) {
+            return null;
+        } else {
+            var row = board.childNodes[y];
+            return row.childNodes[x];
+        }
     },
 
     onResetClick: function() {
