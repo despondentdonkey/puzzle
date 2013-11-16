@@ -50,7 +50,7 @@ var PuzzleGame = {
 
         if (this.isValidMove(clickedIndex, emptyIndex)) {
             this.clicks++;
-            $("#clicks").html("Clicks: " + this.clicks);
+            $("#puzzle_clicks").html("Clicks: " + this.clicks);
 
             //Some basic horizontal slot movement. Probably a much better way to do it.
             var clickedRow = board.childNodes[clickedIndex.y];
@@ -133,6 +133,9 @@ var PuzzleGame = {
     onResetClick: function() {
         var width = $("#puzzle_width")[0].value;
         var height = $("#puzzle_height")[0].value;
+
+        $("#puzzle_clicks").html("Clicks: 0");
+        this.clicks = 0;
 
         if (width >= 2 && height >= 2 && width <= 10 && height <= 10) {
             this.width = width;
