@@ -6,8 +6,8 @@ $(document).ready(function() {
 
 var PuzzleGame = {
     // Tile Width/Height
-    width: 10,
-    height: 10,
+    width: 4,
+    height: 3,
     clicks: 0,
 
     start: function() {
