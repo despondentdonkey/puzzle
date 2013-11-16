@@ -100,6 +100,10 @@ var PuzzleGame = {
                 }
             }
         }
+
+        if (this.isComplete(board)) {
+            console.log("You completed the puzzle!");
+        }
     },
 
     //Gets the index of the object from the id. Must have a format of #|#.
@@ -146,6 +150,33 @@ var PuzzleGame = {
             return false;
         else
             return (+clickedSlot.x === +emptySlot.x || +clickedSlot.y === +emptySlot.y);
+    },
+
+    //Checks if the puzzle has been completed.
+    isComplete: function(board) {
+        var complete = false;
+
+        for (var i=0; i < board.childNodes.length; ++i) {
+            var row = board.childNodes[i];
+
+            for (var j=0; j < row.childNodes.length; ++j) {
+                var slot = row.childNodes[j];
+
+                if (slot.childNodes[0]) {
+                    var slotIndex = this.getIndex(slot);
+                    var imgIndex = this.getIndex(slot.childNodes[0]);
+
+                    if (slotIndex.x === imgIndex.x && slotIndex.y === imgIndex.y) {
+                        complete = true;
+                    } else {
+                        complete = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return complete;
     },
 
     createBoard: function(images) {
