@@ -8,32 +8,41 @@
     }
 
     #puzzle {
-        font-family: arial;
         border-bottom: 1px solid #ACACAC;
         border-right: 1px solid #ACACAC;
         border-top: 1px solid #E8E8E8;
         border-left: 1px solid #E8E8E8;
-        background-color: #FFFFFF;
+        background-color: #000000;
 
         /* Centering */
-        text-align:center;
         width: 800px;
         margin-left: auto;
         margin-right: auto;
     }
 
+    #puzzle_ui {
+        font-family: arial;
+        background-color: #FFFFFF;
+        text-align: center;
+    }
+
     td {
-        border: 1px solid #ACACAC;
+        padding: 0px;
     }
     </style>
 
     <body>
         <img hidden=true id="puzzle_img" src="img.jpg"></img>
         <div id="puzzle">
-            <span id="puzzle_clicks">Clicks: 0</span>
-            <input type="button" value="reset" onClick="PuzzleGame.onResetClick()"></input>
-            Width: <input id="puzzle_width" type="text"></input>
-            Height: <input id="puzzle_height" type="text"></input>
+            <div id="puzzle_board"></div>
+            <div id="puzzle_ui">
+                <span id="puzzle_clicks">Clicks: 0</span>
+                |
+                Width: <input id="puzzle_width" type="text" size="2"></input>
+                Height: <input id="puzzle_height" type="text" size="2"></input>
+                |
+                <input type="button" value="Reset" onClick="PuzzleGame.onResetClick()"></input>
+            </div>
         </div>
     </body>
 </html>

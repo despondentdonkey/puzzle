@@ -11,7 +11,7 @@ var PuzzleGame = {
     clicks: 0,
 
     start: function() {
-        var div = $("#puzzle");
+        var div = $("#puzzle_board");
 
         //Base image and the urls of the sliced images.
         var img = $("#puzzle_img")[0];
