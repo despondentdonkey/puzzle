@@ -128,18 +128,8 @@ var PuzzleGame = {
     },
 
     onResetClick: function() {
-        var width = $("#puzzle_width")[0].value;
-        var height = $("#puzzle_height")[0].value;
-
         $("#puzzle_clicks").html("Clicks: 0");
         this.clicks = 0;
-
-        if (width >= 2 && height >= 2 && width <= 10 && height <= 10) {
-            this.width = width;
-            this.height = height;
-        } else {
-            console.error("Either too big or too small. We should probably tell the player this.");
-        }
 
         $("#puzzle_table").remove();
         this.start();
