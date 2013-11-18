@@ -27,9 +27,6 @@ var PuzzleGame = {
     handleMove: function(clickedSlot) {
         var clickedIndex = this.getIndex(clickedSlot);
         var board = this.getBoard();
-        //console.log('td id: ' + slot.id.substr(-3));
-        //console.log('img id: ' + slot.firstChild.id.substr(-3));
-        //console.log(PuzzleGame.getSlot(clickedIndex.x, clickedIndex.y));
 
         //Get the empty slot from the board.
         var emptySlot;
@@ -148,6 +145,10 @@ var PuzzleGame = {
         this.start();
     },
 
+    onSolveClick: function() {
+        this.solvePuzzle(this.getBoard());
+    },
+
     isValidMove: function(clickedSlot, emptySlot) {
         if (+clickedSlot.x === +emptySlot.x && +clickedSlot.y === +emptySlot.y)
             return false;
@@ -182,8 +183,24 @@ var PuzzleGame = {
         return complete;
     },
 
+    solvePuzzle: function(board) {
+        for (var i=0; i < board.childNodes.length; ++i) {
+            var row = board.childNodes[i];
+
+            for (var j=0; j < row.childNodes.length; ++j) {
+                var tmpSlot = row.childNodes[j];
+                $(tmpSlot).html(this.images[i][j]);
+            }
+        }
+    },
+
     shuffle2DArray: function(array) {
-        var arrayCopy = array.slice(0);
+        //Copy rows
+        var arrayCopy = array.slice();
+
+        //Copy columns
+        for (var i = 0; i < array.length; ++i)
+            arrayCopy[i] = array[i].slice();
 
         //Shuffle rows
         arrayCopy.sort(function() {
@@ -224,7 +241,7 @@ var PuzzleGame = {
     createImages: function(img) {
         var w = this.width, h = this.height;
 
-        var images = [];
+        this.images = [];
 
         //The width/height of each slice.
         var sliceWidth = img.width / w;
@@ -236,15 +253,15 @@ var PuzzleGame = {
         canvas.height = sliceHeight;
 
         for (var i=0; i<h; i++) {
-            images[i] = [];
+            this.images[i] = [];
             for (var j=0; j<w; j++) {
                 gc.drawImage(img, j * sliceWidth, i * sliceHeight, sliceWidth, sliceHeight, 0, 0, canvas.width, canvas.height);
 
                 var imgURL = canvas.toDataURL();
-                images[i][j] = '<img src="'+imgURL+'" class="puzzle_img" id="puzzle_img_'+i+'|'+j+'" />';
+                this.images[i][j] = '<img src="'+imgURL+'" class="puzzle_img" id="puzzle_img_'+i+'|'+j+'" />';
             }
         }
 
-        return images;
+        return this.images;
     }
 };
