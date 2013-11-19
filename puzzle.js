@@ -6,8 +6,8 @@ $(document).ready(function() {
 
 var PuzzleGame = {
     // Tile Width/Height
-    width: 4,
-    height: 3,
+    width: 2,
+    height: 2,
     clicks: 0,
 
     start: function() {
@@ -99,7 +99,7 @@ var PuzzleGame = {
         }
 
         if (this.isComplete(board)) {
-            console.log("You completed the puzzle!");
+            this.solvePuzzle(board);
         }
     },
 
@@ -131,6 +131,8 @@ var PuzzleGame = {
         $("#puzzle_clicks").html("Clicks: 0");
         this.clicks = 0;
 
+        $("#puzzle_congrats").hide();
+
         $("#puzzle_table").remove();
         this.start();
     },
@@ -140,10 +142,10 @@ var PuzzleGame = {
     },
 
     isValidMove: function(clickedSlot, emptySlot) {
-        if (+clickedSlot.x === +emptySlot.x && +clickedSlot.y === +emptySlot.y)
+        if (clickedSlot.x === emptySlot.x && clickedSlot.y === emptySlot.y)
             return false;
         else
-            return (+clickedSlot.x === +emptySlot.x || +clickedSlot.y === +emptySlot.y);
+            return (clickedSlot.x === emptySlot.x || clickedSlot.y === emptySlot.y);
     },
 
     //Checks if the puzzle has been completed.
@@ -159,6 +161,12 @@ var PuzzleGame = {
                 if (slot.childNodes[0]) {
                     var slotIndex = this.getIndex(slot);
                     var imgIndex = this.getIndex(slot.childNodes[0]);
+                    console.log("NEW____")
+                    console.log("SLOT");
+                    console.log(slotIndex);
+                    console.log("IMG\n");
+                    console.log(imgIndex);
+                    console.log(slot.childNodes[0]);
 
                     if (slotIndex.x === imgIndex.x && slotIndex.y === imgIndex.y) {
                         complete = true;
@@ -173,6 +181,11 @@ var PuzzleGame = {
         return complete;
     },
 
+    onComplete: function(autoCompleted) {
+        $("#puzzle_congrats").html("Congratulations, you solved the puzzle in "+PuzzleGame.clicks+" clicks!");
+        $("#puzzle_congrats").show();
+    },
+
     solvePuzzle: function(board) {
         for (var i=0; i < board.childNodes.length; ++i) {
             var row = board.childNodes[i];
@@ -182,6 +195,8 @@ var PuzzleGame = {
                 $(tmpSlot).html(this.images[i][j]);
             }
         }
+
+        this.onComplete();
     },
 
     shuffle2DArray: function(array) {
