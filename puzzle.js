@@ -6,8 +6,8 @@ $(document).ready(function() {
 
 var PuzzleGame = {
     // Tile Width/Height
-    width: 2,
-    height: 2,
+    width: 4,
+    height: 3,
     clicks: 0,
 
     start: function() {
@@ -150,8 +150,6 @@ var PuzzleGame = {
 
     //Checks if the puzzle has been completed.
     isComplete: function(board) {
-        var complete = false;
-
         for (var i=0; i < board.childNodes.length; ++i) {
             var row = board.childNodes[i];
 
@@ -161,24 +159,15 @@ var PuzzleGame = {
                 if (slot.childNodes[0]) {
                     var slotIndex = this.getIndex(slot);
                     var imgIndex = this.getIndex(slot.childNodes[0]);
-                    console.log("NEW____")
-                    console.log("SLOT");
-                    console.log(slotIndex);
-                    console.log("IMG\n");
-                    console.log(imgIndex);
-                    console.log(slot.childNodes[0]);
 
-                    if (slotIndex.x === imgIndex.x && slotIndex.y === imgIndex.y) {
-                        complete = true;
-                    } else {
-                        complete = false;
-                        break;
+                    if (!(slotIndex.x === imgIndex.x && slotIndex.y === imgIndex.y)) {
+                        return false;
                     }
                 }
             }
         }
 
-        return complete;
+        return true;
     },
 
     onComplete: function(autoCompleted) {
