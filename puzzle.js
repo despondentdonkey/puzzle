@@ -5,19 +5,13 @@ $(document).ready(function() {
 });
 
 var PuzzleGame = {
-    // Tile Width/Height
     width: 4,
     height: 3,
     clicks: 0,
 
     start: function() {
-        var div = $("#puzzle_board");
-
-        //Base image and the urls of the sliced images.
-        var img = $("#puzzle_img")[0];
-
-        $(div).append(this.createBoard(this.createImages(img)));
-
+        this.images = this.createImages($("#puzzle_img")[0]);
+        $("#puzzle_board").append(this.createBoard(this.images));
         $('.puzzle_td').click(function() {
             var slot = $(this)[0];
             PuzzleGame.handleMove(slot);
@@ -30,11 +24,11 @@ var PuzzleGame = {
 
         //Get the empty slot from the board.
         var emptySlot;
-        for (var i=0; i < board.childNodes.length; ++i) {
-            var row = board.childNodes[i];
+        for (var y=0; y < board.childNodes.length; ++y) {
+            var row = board.childNodes[y];
 
-            for (var j=0; j < row.childNodes.length; ++j) {
-                var tmpSlot = row.childNodes[j];
+            for (var x=0; x < row.childNodes.length; ++x) {
+                var tmpSlot = row.childNodes[x];
 
                 if (tmpSlot.childNodes.length <= 0) {
                     emptySlot = tmpSlot;
@@ -49,7 +43,7 @@ var PuzzleGame = {
             this.clicks++;
             $("#puzzle_clicks").html("Clicks: " + this.clicks);
 
-            //Some basic horizontal slot movement. Probably a much better way to do it.
+            //Moves pieces horizontally/vertically. Very verbose and ugly, needs work to make it look nice.
             var clickedRow = board.childNodes[clickedIndex.y];
             var slotsToMove;
             var rows;
@@ -117,12 +111,10 @@ var PuzzleGame = {
     },
 
     getSlot: function(x, y) {
-        var board = this.getBoard();
-
         if (y < 0 || x < 0) {
             return null;
         } else {
-            var row = board.childNodes[y];
+            var row = this.getBoard().childNodes[y];
             return row.childNodes[x];
         }
     },
@@ -150,11 +142,11 @@ var PuzzleGame = {
 
     //Checks if the puzzle has been completed.
     isComplete: function(board) {
-        for (var i=0; i < board.childNodes.length; ++i) {
-            var row = board.childNodes[i];
+        for (var y=0; y < board.childNodes.length; ++y) {
+            var row = board.childNodes[y];
 
-            for (var j=0; j < row.childNodes.length; ++j) {
-                var slot = row.childNodes[j];
+            for (var x=0; x < row.childNodes.length; ++x) {
+                var slot = row.childNodes[x];
 
                 if (slot.childNodes[0]) {
                     var slotIndex = this.getIndex(slot);
@@ -171,17 +163,16 @@ var PuzzleGame = {
     },
 
     onComplete: function(autoCompleted) {
-        $("#puzzle_congrats").html("Congratulations, you solved the puzzle in "+PuzzleGame.clicks+" clicks!");
         $("#puzzle_congrats").show();
     },
 
     solvePuzzle: function(board) {
-        for (var i=0; i < board.childNodes.length; ++i) {
-            var row = board.childNodes[i];
+        for (var y=0; y < board.childNodes.length; ++y) {
+            var row = board.childNodes[y];
 
-            for (var j=0; j < row.childNodes.length; ++j) {
-                var tmpSlot = row.childNodes[j];
-                $(tmpSlot).html(this.images[i][j]);
+            for (var x=0; x < row.childNodes.length; ++x) {
+                var slot = row.childNodes[x];
+                $(slot).html(this.images[y][x]);
             }
         }
 
@@ -216,26 +207,25 @@ var PuzzleGame = {
         var pieces = ['<table id="puzzle_table">'];
         var shuffledImages = this.shuffle2DArray(images);
 
-        for (var i = 0; i < h; i++) {
+        for (var y = 0; y < h; y++) {
             pieces.push('<tr>');
-            for (var j = 0; j < w; j++) {
-                pieces.push('<td class="puzzle_td" id="puzzle_td_'+i+'|'+j+'">');
-                if (!(i === h-1 && j === w-1)) {
-                    pieces.push(shuffledImages[i][j]);
+            for (var x = 0; x < w; x++) {
+                pieces.push('<td class="puzzle_td" id="puzzle_td_'+y+'|'+x+'">');
+                if (!(y === h-1 && x === w-1)) {
+                    pieces.push(shuffledImages[y][x]);
                 }
                 pieces.push('</td>');
             }
         }
 
         pieces.push('</table>');
-
         return pieces.join('');
     },
 
     createImages: function(img) {
         var w = this.width, h = this.height;
 
-        this.images = [];
+        var images = [];
 
         //The width/height of each slice.
         var sliceWidth = img.width / w;
@@ -246,16 +236,16 @@ var PuzzleGame = {
         canvas.width = sliceWidth;
         canvas.height = sliceHeight;
 
-        for (var i=0; i<h; i++) {
-            this.images[i] = [];
-            for (var j=0; j<w; j++) {
-                gc.drawImage(img, j * sliceWidth, i * sliceHeight, sliceWidth, sliceHeight, 0, 0, canvas.width, canvas.height);
+        for (var y=0; y<h; y++) {
+            images[y] = [];
+            for (var x=0; x<w; x++) {
+                gc.drawImage(img, x * sliceWidth, y * sliceHeight, sliceWidth, sliceHeight, 0, 0, canvas.width, canvas.height);
 
                 var imgURL = canvas.toDataURL();
-                this.images[i][j] = '<img src="'+imgURL+'" class="puzzle_img" id="puzzle_img_'+i+'|'+j+'" />';
+                images[y][x] = '<img src="'+imgURL+'" class="puzzle_img" id="puzzle_img_'+y+'|'+x+'" />';
             }
         }
 
-        return this.images;
+        return images;
     }
 };
