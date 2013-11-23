@@ -1,7 +1,5 @@
-$(document).ready(function() {
-    $("#puzzle_img").load(function() {
-        PuzzleGame.start();
-    });
+$(window).load(function() {
+    PuzzleGame.start();
 });
 
 var PuzzleGame = {
