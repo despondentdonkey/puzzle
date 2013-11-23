@@ -10,8 +10,10 @@ var PuzzleGame = {
     clicks: 0,
 
     start: function() {
-        this.images = this.createImages($("#puzzle_img")[0]);
+        var img = $('#puzzle_img')[0];
+        this.images = this.createImages(img);
         $("#puzzle_board").append(this.createBoard(this.images));
+        $('#puzzle').css('width', img.width + 9); // 9 = offset from space between TDs and border
         $('.puzzle_td').click(function() {
             var slot = $(this)[0];
             PuzzleGame.handleMove(slot);
