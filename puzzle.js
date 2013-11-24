@@ -203,7 +203,25 @@ var PuzzleGame = {
     },
 
     onComplete: function(autoCompleted) {
-        $("#puzzle_congrats").show();
+        if (!this._animating) {
+            var animSpeed = this.solvedAnimationSpeed;
+            var self = this;
+            self._animating = true;
+            $('#puzzle_table')
+                .animate({
+                'border-collapse': 'collapse',
+                'border-spacing': '0px'
+                }, {
+                    duration: animSpeed,
+                    complete: function() {
+                        $("#puzzle_congrats").show();
+                        self._animating = false;
+                    },
+                    step: function(now) {
+                        $('#puzzle').css('width', $('#puzzle_table').outerWidth());
+                    }
+                });
+        }
     },
 
     solvePuzzle: function(board) {
