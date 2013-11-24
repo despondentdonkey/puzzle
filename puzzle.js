@@ -7,6 +7,11 @@ var PuzzleGame = {
     height: 3,
     clicks: 0,
 
+    // Animation Settings
+    pieceXAnimationSpeed: 700,
+    pieceYAnimationSpeed: 400,
+    solvedAnimationSpeed: 750,
+
     start: function() {
         var img = $('#puzzle_img')[0];
         this.images = this.createImages(img);
@@ -39,7 +44,7 @@ var PuzzleGame = {
 
         var emptyIndex = this.getIndex(emptySlot);
 
-        if (this.isValidMove(clickedIndex, emptyIndex)) {
+        if (this.isValidMove(clickedIndex, emptyIndex) && !this._animating) {
             this.clicks++;
             $("#puzzle_clicks").html("Clicks: " + this.clicks);
 
@@ -47,6 +52,38 @@ var PuzzleGame = {
             var clickedRow = board.childNodes[clickedIndex.y];
             var slotsToMove;
             var rows;
+            var self = this;
+
+            // get + or - direction from two points
+            var getdir = function(x1, x2) {
+                return (x1 - x2)/Math.abs(x1 - x2);
+            };
+
+            // Moves image from current (cur) slot to destination (dest) slot
+            // also animates movement of image, actually moves when animation finishes
+            // dir = 'x' or 'y'
+            var mv = function(dir, dest, cur) {
+                if (dest && cur) {
+                    self._animating = true;
+
+                    var img = cur.childNodes[0];
+                    var y = dir === 'y' ? cur.offsetHeight * getdir(dest.offsetTop, cur.offsetTop) : 0;
+                    var x = dir === 'x' ? cur.offsetWidth * getdir(dest.offsetLeft, cur.offsetLeft) : 0;
+                    // x tends to move slower than y
+                    var animSpeed = dir === 'x' ? self.pieceXAnimationSpeed : self.pieceYAnimationSpeed;
+
+                    $(img).css('position', 'relative').animate({
+                        left: "+="+x,
+                        top: "+="+y
+                    }, animSpeed, function() {
+                        // Clear all css values set during animation (otherwise cray bugs)
+                        $(img).css({'position': '', 'left': '', 'top': ''})
+                        $(dest).html(img);
+                        self._animating = false;
+                    });
+                }
+            };
+
 
             if (clickedIndex.y === emptyIndex.y) {
                 if (clickedIndex.x > emptyIndex.x) {
@@ -56,7 +93,7 @@ var PuzzleGame = {
                         var currentSlot = this.getSlot(realIndex, clickedIndex.y);
                         var destSlot = this.getSlot(realIndex - 1, clickedIndex.y);
 
-                        $(destSlot).html(currentSlot.childNodes[0]);
+                        mv('x', destSlot, currentSlot);
                     }
                 } else {
                     slotsToMove = $(clickedRow.childNodes).slice(clickedIndex.x, emptyIndex.x);
@@ -65,7 +102,7 @@ var PuzzleGame = {
                         var currentSlot = this.getSlot(realIndex, clickedIndex.y);
                         var destSlot = this.getSlot(realIndex + 1, clickedIndex.y);
 
-                        $(destSlot).html(currentSlot.childNodes[0]);
+                        mv('x', destSlot, currentSlot);
                     }
                 }
             } else if (clickedIndex.x === emptyIndex.x) {
@@ -77,7 +114,7 @@ var PuzzleGame = {
                         var currentSlot = this.getSlot(clickedIndex.x, realIndex);
                         var destSlot = this.getSlot(clickedIndex.x, realIndex + 1);
 
-                        $(destSlot).html(currentSlot.childNodes[0]);
+                        mv('y', destSlot, currentSlot);
                     }
                 } else {
                     rows = $(board.childNodes).slice(emptyIndex.y, clickedIndex.y);
@@ -86,7 +123,7 @@ var PuzzleGame = {
                         var currentSlot = this.getSlot(clickedIndex.x, realIndex);
                         var destSlot = this.getSlot(clickedIndex.x, realIndex - 1);
 
-                        $(destSlot).html(currentSlot.childNodes[0]);
+                        mv('y', destSlot, currentSlot);
                     }
                 }
             }
@@ -120,17 +157,20 @@ var PuzzleGame = {
     },
 
     onResetClick: function() {
-        $("#puzzle_clicks").html("Clicks: 0");
-        this.clicks = 0;
+        if (!this._animating) {
+            $("#puzzle_clicks").html("Clicks: 0");
+            this.clicks = 0;
 
-        $("#puzzle_congrats").hide();
+            $("#puzzle_congrats").hide();
 
-        $("#puzzle_table").remove();
-        this.start();
+            $("#puzzle_table").remove();
+            this.start();
+        }
     },
 
     onSolveClick: function() {
-        this.solvePuzzle(this.getBoard());
+        if (!this._animating)
+            this.solvePuzzle(this.getBoard());
     },
 
     isValidMove: function(clickedSlot, emptySlot) {
