@@ -16,7 +16,7 @@ var PuzzleGame = {
         var img = $('#puzzle_img')[0];
         this.images = this.createImages(img);
         $("#puzzle_board").append(this.createBoard(this.images));
-        $('#puzzle').css('width', img.width + 9); // 9 = offset from space between TDs and border
+        $('#puzzle').css('width', $('#puzzle_table').outerWidth());
         $('.puzzle_td').click(function() {
             var slot = $(this)[0];
             PuzzleGame.handleMove(slot);
