@@ -1,4 +1,14 @@
 $(window).load(function() {
+    // Set up puzzle infrasturcture
+    $('#puzzle').append(
+    '<div id="puzzle_board"></div>'+
+    '<div id="puzzle_ui">'+
+        '<span id="puzzle_clicks">Clicks: 0</span>'+
+        '|'+
+        '<input type="button" value="Reset" onClick="PuzzleGame.onResetClick()" />'+
+        '<input type="button" value="Solve" onClick="PuzzleGame.onSolveClick()" />'+
+    '</div>');
+
     PuzzleGame.start();
 });
 
