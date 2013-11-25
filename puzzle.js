@@ -92,6 +92,7 @@ var PuzzleGame = {
                         $(img).css({'position': '', 'left': '', 'top': ''})
                         $(dest).html(img);
                         self._animating = false;
+                        checkComplete();
                     });
                 }
             };
@@ -141,9 +142,11 @@ var PuzzleGame = {
             }
         }
 
-        if (this.isComplete(board)) {
-            this.solvePuzzle(board);
-        }
+        var checkComplete = function() {
+            if (self.isComplete(board)) {
+                self.solvePuzzle(board);
+            }
+        };
     },
 
     //Gets the index of the object from the id. Must have a format of #|#.
