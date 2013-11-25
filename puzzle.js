@@ -3,9 +3,9 @@ $(window).load(function() {
     $('#puzzle').append(
     '<div id="puzzle_board"></div>'+
     '<div id="puzzle_ui">'+
-        '<span id="puzzle_clicks">Clicks: 0</span>'+
-        '|'+
-        '<input type="button" value="Reset" onClick="PuzzleGame.onResetClick()" />'+
+        '<span id="puzzle_clicks">'+PuzzleGame.clickCounterText+'0</span>'+
+        '&nbsp;&nbsp;|&nbsp;&nbsp;'+
+        '<input type="button" value="Reset" onClick="PuzzleGame.onResetClick()" />&nbsp;'+
         '<input type="button" value="Solve" onClick="PuzzleGame.onSolveClick()" />'+
     '</div>');
 
@@ -13,14 +13,16 @@ $(window).load(function() {
 });
 
 var PuzzleGame = {
-    width: 4,
-    height: 3,
+    width: 2,
+    height: 2,
     clicks: 0,
+
+    clickCounterText: 'Clicks: ',
 
     // Animation Settings
     pieceXAnimationSpeed: 700,
     pieceYAnimationSpeed: 400,
-    solvedAnimationSpeed: 750,
+    solvedAnimationSpeed: 450,
 
     start: function() {
         var img = $('#puzzle_img')[0];
@@ -56,7 +58,7 @@ var PuzzleGame = {
 
         if (this.isValidMove(clickedIndex, emptyIndex) && !this._animating) {
             this.clicks++;
-            $("#puzzle_clicks").html("Clicks: " + this.clicks);
+            $("#puzzle_clicks").html(this.clickCounterText + this.clicks);
 
             //Moves pieces horizontally/vertically. Very verbose and ugly, needs work to make it look nice.
             var clickedRow = board.childNodes[clickedIndex.y];
@@ -216,19 +218,20 @@ var PuzzleGame = {
         if (!this._animating) {
             var animSpeed = this.solvedAnimationSpeed;
             var self = this;
+            var $table = $('#puzzle_table');
+
             self._animating = true;
-            $('#puzzle_table')
-                .animate({
-                'border-collapse': 'collapse',
-                'border-spacing': '0px'
+            $("#puzzle_congrats").show();
+            $table.animate({
+                'border-spacing': '0px',
+                'border-collapse': 'collapse'
                 }, {
                     duration: animSpeed,
                     complete: function() {
-                        $("#puzzle_congrats").show();
                         self._animating = false;
                     },
                     step: function(now) {
-                        $('#puzzle').css('width', $('#puzzle_table').outerWidth());
+                        $('#puzzle').css('width', $table.outerWidth());
                     }
                 });
         }
