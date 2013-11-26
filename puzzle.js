@@ -28,11 +28,19 @@ var PuzzleGame = {
         var img = $('#puzzle_img')[0];
         this.images = this.createImages(img);
         $("#puzzle_board").append(this.createBoard(this.images));
-        $('#puzzle').css('width', $('#puzzle_table').outerWidth());
         $('.puzzle_td').click(function() {
             var slot = $(this)[0];
             PuzzleGame.handleMove(slot);
         });
+
+        // Calculate width of puzzle div based on CSS rules
+        var $p = $('#puzzle');
+        var $pt = $('#puzzle_table');
+        $p.css('width', (this.width * parseInt($pt.css('border-spacing').split('px')[0], 10)) +
+            (parseInt($p.css('borderRightWidth').split('px')[0], 10)) +
+            (parseInt($p.css('borderLeftWidth').split('px')[0], 10)) +
+            img.width + 1);
+
     },
 
     handleMove: function(clickedSlot) {
