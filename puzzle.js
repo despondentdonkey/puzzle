@@ -16,6 +16,7 @@ var PuzzleGame = {
     width: 2,
     height: 2,
     clicks: 0,
+    completed: false,
 
     clickCounterText: 'Clicks: ',
 
@@ -30,7 +31,9 @@ var PuzzleGame = {
         $("#puzzle_board").append(this.createBoard(this.images));
         $('.puzzle_td').click(function() {
             var slot = $(this)[0];
-            PuzzleGame.handleMove(slot);
+            if (!PuzzleGame.completed) {
+                PuzzleGame.handleMove(slot);
+            }
         });
 
         // Calculate width of puzzle div based on CSS rules
@@ -75,7 +78,7 @@ var PuzzleGame = {
             var self = this;
 
             // get + or - direction from two points
-            var getdir = function(x1, x2) {
+            var getDir = function(x1, x2) {
                 return (x1 - x2)/Math.abs(x1 - x2);
             };
 
@@ -87,8 +90,8 @@ var PuzzleGame = {
                     self._animating = true;
 
                     var img = cur.childNodes[0];
-                    var y = dir === 'y' ? cur.offsetHeight * getdir(dest.offsetTop, cur.offsetTop) : 0;
-                    var x = dir === 'x' ? cur.offsetWidth * getdir(dest.offsetLeft, cur.offsetLeft) : 0;
+                    var y = dir === 'y' ? cur.offsetHeight * getDir(dest.offsetTop, cur.offsetTop) : 0;
+                    var x = dir === 'x' ? cur.offsetWidth * getDir(dest.offsetLeft, cur.offsetLeft) : 0;
                     // x tends to move slower than y
                     var animSpeed = dir === 'x' ? self.pieceXAnimationSpeed : self.pieceYAnimationSpeed;
 
@@ -183,6 +186,7 @@ var PuzzleGame = {
         if (!this._animating) {
             $("#puzzle_clicks").html("Clicks: 0");
             this.clicks = 0;
+            this.completed = false;
 
             $("#puzzle_congrats").hide();
 
@@ -192,8 +196,9 @@ var PuzzleGame = {
     },
 
     onSolveClick: function() {
-        if (!this._animating)
+        if (!this.completed && !this._animating) {
             this.solvePuzzle(this.getBoard());
+        }
     },
 
     isValidMove: function(clickedSlot, emptySlot) {
@@ -226,6 +231,8 @@ var PuzzleGame = {
     },
 
     onComplete: function(autoCompleted) {
+        this.completed = true;
+
         if (!this._animating) {
             var animSpeed = this.solvedAnimationSpeed;
             var self = this;
