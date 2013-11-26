@@ -58,7 +58,7 @@ var PuzzleGame = {
             var self = this;
 
             // get + or - direction from two points
-            var getdir = function(x1, x2) {
+            var getDir = function(x1, x2) {
                 return (x1 - x2)/Math.abs(x1 - x2);
             };
 
@@ -70,8 +70,8 @@ var PuzzleGame = {
                     self._animating = true;
 
                     var img = cur.childNodes[0];
-                    var y = dir === 'y' ? cur.offsetHeight * getdir(dest.offsetTop, cur.offsetTop) : 0;
-                    var x = dir === 'x' ? cur.offsetWidth * getdir(dest.offsetLeft, cur.offsetLeft) : 0;
+                    var y = dir === 'y' ? cur.offsetHeight * getDir(dest.offsetTop, cur.offsetTop) : 0;
+                    var x = dir === 'x' ? cur.offsetWidth * getDir(dest.offsetLeft, cur.offsetLeft) : 0;
                     // x tends to move slower than y
                     var animSpeed = dir === 'x' ? self.pieceXAnimationSpeed : self.pieceYAnimationSpeed;
 
