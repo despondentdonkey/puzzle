@@ -173,8 +173,9 @@ var PuzzleGame = {
     },
 
     onSolveClick: function() {
-        if (!this._animating)
+        if (!this.completed && !this._animating) {
             this.solvePuzzle(this.getBoard());
+        }
     },
 
     isValidMove: function(clickedSlot, emptySlot) {
