@@ -1,20 +1,11 @@
 $(window).load(function() {
-    // Set up puzzle infrasturcture
-    $('#puzzle').append(
-    '<div id="puzzle_board"></div>'+
-    '<div id="puzzle_ui">'+
-        '<span id="puzzle_clicks">'+PuzzleGame.clickCounterText+'0</span>'+
-        '&nbsp;&nbsp;|&nbsp;&nbsp;'+
-        '<input type="button" value="Reset" onClick="PuzzleGame.onResetClick()" />&nbsp;'+
-        '<input type="button" value="Solve" onClick="PuzzleGame.onSolveClick()" />'+
-    '</div>');
-
+    $('#puzzle_clicks').html(PuzzleGame.clickCounterText + '0');
     PuzzleGame.start();
 });
 
 var PuzzleGame = {
-    width: 2,
-    height: 2,
+    width: 4,
+    height: 3,
     clicks: 0,
     completed: false,
 

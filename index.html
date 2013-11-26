@@ -46,7 +46,14 @@
     <body>
         <div id="puzzle">
             <img hidden id="puzzle_img" src="img.jpg" />
-            <div hidden id="puzzle_congrats">Congratulations, you solved the puzzle!</div>
+            <div id="puzzle_board"></div>
+            <div id="puzzle_ui">
+                <div hidden id="puzzle_congrats">Congratulations, you solved the puzzle!</div>
+                <span id="puzzle_clicks"></span>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <input type="button" value="Reset" onClick="PuzzleGame.onResetClick()" />&nbsp;
+                <input type="button" value="Solve" onClick="PuzzleGame.onSolveClick()" />
+            </div>
         </div>
     </body>
 </html>
