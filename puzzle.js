@@ -6,6 +6,7 @@ var PuzzleGame = {
     width: 4,
     height: 3,
     clicks: 0,
+    completed: false,
 
     // Animation Settings
     pieceXAnimationSpeed: 700,
@@ -19,7 +20,9 @@ var PuzzleGame = {
         $('#puzzle').css('width', $('#puzzle_table').outerWidth());
         $('.puzzle_td').click(function() {
             var slot = $(this)[0];
-            PuzzleGame.handleMove(slot);
+            if (!PuzzleGame.completed) {
+                PuzzleGame.handleMove(slot);
+            }
         });
     },
 
@@ -160,6 +163,7 @@ var PuzzleGame = {
         if (!this._animating) {
             $("#puzzle_clicks").html("Clicks: 0");
             this.clicks = 0;
+            this.completed = false;
 
             $("#puzzle_congrats").hide();
 
@@ -203,6 +207,8 @@ var PuzzleGame = {
     },
 
     onComplete: function(autoCompleted) {
+        this.completed = true;
+
         if (!this._animating) {
             var animSpeed = this.solvedAnimationSpeed;
             var self = this;
